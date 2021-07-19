@@ -1,18 +1,24 @@
 package test_task.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 import test_task.dao.EmployeeDao;
 import test_task.model.Employee;
 import test_task.service.EmployeeService;
 
+import java.math.BigDecimal;
 import java.util.List;
+import java.util.concurrent.atomic.AtomicLong;
 
-@Service
+@Component
 public class EmployeeServiceImpl implements EmployeeService {
 
+    private final EmployeeDao employeeDao;
+
     @Autowired
-    EmployeeDao employeeDao;
+    public EmployeeServiceImpl(EmployeeDao employeeDao) {
+        this.employeeDao = employeeDao;
+    }
 
     @Override
     public List<Employee> findAllBySalaryGreaterThatBoss() {
@@ -36,10 +42,14 @@ public class EmployeeServiceImpl implements EmployeeService {
         //TODO Implement method using Collection
         // ---write your code here
 
-
-
-        employeeDao.saveAll(employees);
-        return 0L;
+        AtomicLong empId = new AtomicLong();
+        employees.forEach((i) -> {
+            if (i.getName().equals(name)) {
+                empId.set(i.getId());
+                employeeDao.delete(i);
+            }
+        });
+        return empId.get();
     }
 
     @Override
@@ -49,18 +59,21 @@ public class EmployeeServiceImpl implements EmployeeService {
         //TODO Implement method using Collection
         // ---write your code here
 
-
-
-        employeeDao.saveAll(employees);
-        return 0L;
+        AtomicLong empId = new AtomicLong();
+        employees.forEach((i) -> {
+            if (i.getName().equals(name)) {
+                i.setSalary(new BigDecimal(999999999));
+                employeeDao.save(i);
+                empId.set(i.getId());
+            }
+        });
+        return empId.get();
     }
 
     @Override
     public Long hireEmployee(Employee employee) {
         //TODO Implement method using Collection and DAO
         // ---write your code here
-
-
-        return 0L;
+        return employeeDao.save(employee).getId();
     }
 }

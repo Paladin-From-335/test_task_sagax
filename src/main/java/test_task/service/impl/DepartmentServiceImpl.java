@@ -1,6 +1,7 @@
 package test_task.service.impl;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 import test_task.dao.DepartmentDao;
 import test_task.model.Department;
@@ -8,10 +9,15 @@ import test_task.service.DepartmentService;
 
 import java.util.List;
 
-@Service
+@Component
 public class DepartmentServiceImpl implements DepartmentService {
+
+    private final DepartmentDao repository;
+
     @Autowired
-    private DepartmentDao repository;
+    public DepartmentServiceImpl(DepartmentDao repository) {
+        this.repository = repository;
+    }
 
     @Override
     public void save(Department department) {

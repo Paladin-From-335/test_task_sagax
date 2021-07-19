@@ -1,9 +1,11 @@
 package test_task.service;
 
+import org.springframework.stereotype.Service;
 import test_task.model.Employee;
 
 import java.util.List;
 
+@Service
 public interface EmployeeService {
 
     List<Employee> findAllBySalaryGreaterThatBoss();
